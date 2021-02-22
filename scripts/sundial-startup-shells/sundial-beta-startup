@@ -1,0 +1,39 @@
+#!/bin/sh
+
+SUNDIAL_BASE_PATH='/home/sundial/BETA'
+DEFAULT_SPRING_PROFILE='beta'
+MONGODB_URI='mongodb://localhost:27017'
+REDIS_HOST='localhost'
+
+restart_service() {
+  JAR_PATH=$1
+  JAR_ARTIFACT_ID=$2
+  JAR_VERSION=$3
+  JVM_PARAMS=$4
+  SPRING_PROFILE=$5
+  echo "service params {JAR_PATH:$JAR_PATH, JAR_ARTIFACT_ID:$JAR_ARTIFACT_ID, JAR_VERSION:$JAR_VERSION, JVM_PARAMS:$JVM_PARAMS, SPRING_PROFILE:$SPRING_PROFILE}"
+
+  PID=$(ps aux | grep "$JAR_ARTIFACT_ID" | grep java | awk '{print $2}')
+  if [ -z "$PID" ]; then
+    echo "no process related to jar: $JAR_ARTIFACT_ID"
+  else
+    echo "process:$PID related to jar: $JAR_ARTIFACT_ID"
+    kill "$PID"
+  fi
+
+  cd "$JAR_PATH" || exit
+
+  if [ -z "$SPRING_PROFILE" ]; then
+    SPRING_PROFILE="$DEFAULT_SPRING_PROFILE"
+  fi
+
+  echo "determined SPRING_PROFILE: $SPRING_PROFILE"
+
+  CMD="java $JVM_PARAMS -jar $JAR_ARTIFACT_ID-$JAR_VERSION.jar --spring.cloud.config.uri=http://sd1.benbenedu.cn:8888 --spring.profiles.active=$SPRING_PROFILE --spring.data.mongodb.uri=$MONGODB_URI --spring.redis.host=$REDIS_HOST"
+  echo "CMD: $CMD"
+  nohup "$CMD" &
+}
+
+#restart_service "$SUNDIAL_BASE_PATH/sundial-broadcast" broadcast 2.3 '' prod
+
+restart_service "$SUNDIAL_BASE_PATH/sundial-broadcast" broadcast 2.3
