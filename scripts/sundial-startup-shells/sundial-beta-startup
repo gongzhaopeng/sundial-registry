@@ -31,7 +31,7 @@ restart_service() {
 
   CMD="java $JVM_PARAMS -jar $JAR_ARTIFACT_ID-$JAR_VERSION.jar --spring.cloud.config.uri=http://sd1.benbenedu.cn:8888 --spring.profiles.active=$SPRING_PROFILE --spring.data.mongodb.uri=$MONGODB_URI --spring.redis.host=$REDIS_HOST"
   echo "CMD: $CMD"
-  nohup "$CMD" &
+  nohup $CMD &
 }
 
 #restart_service "$SUNDIAL_BASE_PATH/sundial-broadcast" broadcast 2.3 '' prod
