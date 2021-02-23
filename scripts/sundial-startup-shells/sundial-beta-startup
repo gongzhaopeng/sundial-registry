@@ -1,14 +1,41 @@
-#!/bin/sh
+#!/bin/bash
 
 SUNDIAL_BASE_PATH='/home/sundial/BETA'
 DEFAULT_SPRING_PROFILE='beta'
+SPRING_CLOUD_CONFIG_URI='http://sd1.benbenedu.cn:8888'
 MONGODB_URI='mongodb://localhost:27017'
 REDIS_HOST='localhost'
+
+GATEWAY_ARTIFACT_ID="gateway"
+GATEWAY_ARTIFACT_VERSION="0.2"
+GATEWAY_ARTIFACT_REL_PATH="sundial-gateway"
+ARTIFACT_LIST=("broadcast" "2.3" "sundial-broadcast"
+  "growth-answer" "0.2" "sundial-growthanswer"
+  "dataexporter" "0.0.9" "sundial-dataexporter"
+  "examconfig" "1.1.8" "sundial-examconfig"
+  "benben-store" "0.5" "sundial-bbstore"
+  "preference" "1.2.2" "sundial-preference"
+  "resource" "1.1.6" "sundial-resource"
+  "report" "1.4.9" "sundial-report"
+  "promotion" "0.0.3" "sundial-promotion"
+  "gradedlibrary" "0.5" "sundial-gradedlibrary"
+  "xauth" "2.1" "sundial-xauth"
+  "question" "1.2.1" "sundial-question"
+  "examstation" "1.4.4" "sundial-examstation"
+  "accountcenter" "1.3.2" "sundial-accountcenter"
+  "exampaper" "1.0.5" "sundial-exampaper"
+  "delivery" "1.2.0" "sundial-delivery"
+  "exammonitor" "0.0.1" "sundial-exammonitor"
+  "registry" "0.2" "sundial-registry"
+  "examresult" "1.2.4" "sundial-examresult")
+ARTIFACT_COUNT=${#ARTIFACT_LIST[@]}/3
+
+echo "ARTIFACT_COUNT: $ARTIFACT_COUNT"
 
 stop_service() {
   JAR_ARTIFACT_ID=$1
 
-  PID=$(ps aux | grep "$JAR_ARTIFACT_ID" | grep java | awk '{print $2}')
+  PID=$(ps aux | grep "$JAR_ARTIFACT_ID" | grep java | grep '\-\-spring.cloud.config.uri=' | awk '{print $2}')
   if [ -z "$PID" ]; then
     echo "no process related to jar: $JAR_ARTIFACT_ID"
   else
@@ -37,19 +64,44 @@ restart_service() {
 
   echo "determined SPRING_PROFILE: $SPRING_PROFILE"
 
-  CMD="java $JVM_PARAMS -jar $JAR_ARTIFACT_ID-$JAR_VERSION.jar --spring.cloud.config.uri=http://sd1.benbenedu.cn:8888 --spring.profiles.active=$SPRING_PROFILE --spring.data.mongodb.uri=$MONGODB_URI --spring.redis.host=$REDIS_HOST"
+  CMD="java $JVM_PARAMS -jar $JAR_ARTIFACT_ID-$JAR_VERSION.jar --spring.cloud.config.uri=$SPRING_CLOUD_CONFIG_URI --spring.profiles.active=$SPRING_PROFILE --spring.data.mongodb.uri=$MONGODB_URI --spring.redis.host=$REDIS_HOST"
   echo "CMD: $CMD"
   nohup $CMD &
 }
 
-echo 'Stopping services...'
-stop_service broadcast
+echo ''
+echo 'Stopping gateway...'
+
+stop_service $GATEWAY_ARTIFACT_ID
 
 echo ''
-echo 'Sleeping...'
+echo 'Stopping services...'
+
+for ((i = 0; i < ARTIFACT_COUNT; i++)); do
+  stop_service "${ARTIFACT_LIST[i * 3]}"
+done
+
+echo ''
+echo 'Sleeping after stopping services...'
 sleep 15s
 
+echo ''
 echo 'Restarting services...'
+
+for ((i = 0; i < ARTIFACT_COUNT; i++)); do
+  restart_service "$SUNDIAL_BASE_PATH/${ARTIFACT_LIST[i * 3 + 2]}" "${ARTIFACT_LIST[i * 3]}" "${ARTIFACT_LIST[i * 3 + 1]}"
+done
+
 #restart_service "$SUNDIAL_BASE_PATH/sundial-broadcast" broadcast 2.3 '' prod
 
-restart_service "$SUNDIAL_BASE_PATH/sundial-broadcast" broadcast 2.3
+echo ''
+echo 'Sleeping after restarting services...'
+sleep 30s
+
+echo ''
+echo 'Restarting gateway...'
+
+restart_service "$SUNDIAL_BASE_PATH/$GATEWAY_ARTIFACT_REL_PATH" $GATEWAY_ARTIFACT_ID $GATEWAY_ARTIFACT_VERSION
+
+echo ''
+echo "Congratulations! Sundial:$SPRING_PROFILE is up."
