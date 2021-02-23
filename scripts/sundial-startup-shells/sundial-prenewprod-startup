@@ -108,7 +108,7 @@ sleep 15s
 echo ''
 echo 'Restarting extra services...'
 
-restart_service "/home/sundial/prefer-open/jar" prefer-open 3.4 '-Xms1024m' beta
+restart_service "/home/sundial/prefer-open/jar" prefer-open 3.5 '-Xms1024m' beta
 
 echo ''
 echo 'Restarting services...'
