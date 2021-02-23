@@ -35,12 +35,12 @@ echo "ARTIFACT_COUNT: $ARTIFACT_COUNT"
 stop_service() {
   JAR_ARTIFACT_ID=$1
 
-  PID=$(ps aux | grep "$JAR_ARTIFACT_ID" | grep java | grep '\-\-spring.cloud.config.uri=' | awk '{print $2}')
+  PID=$(ps aux | grep "$JAR_ARTIFACT_ID" | grep java | grep '\-\-spring.profiles.active=' | awk '{print $2}')
   if [ -z "$PID" ]; then
     echo "no process related to jar: $JAR_ARTIFACT_ID"
   else
     echo "process:$PID related to jar: $JAR_ARTIFACT_ID"
-    kill "$PID"
+    #    kill "$PID"
   fi
 }
 
@@ -66,7 +66,7 @@ restart_service() {
 
   CMD="java $JVM_PARAMS -jar $JAR_ARTIFACT_ID-$JAR_VERSION.jar --spring.cloud.config.uri=$SPRING_CLOUD_CONFIG_URI --spring.profiles.active=$SPRING_PROFILE --spring.data.mongodb.uri=$MONGODB_URI --spring.redis.host=$REDIS_HOST"
   echo "CMD: $CMD"
-  nohup $CMD &
+  #  nohup $CMD &
 }
 
 echo ''
@@ -82,8 +82,18 @@ for ((i = 0; i < ARTIFACT_COUNT; i++)); do
 done
 
 echo ''
+echo 'Stopping extra services...'
+
+stop_service prefer-open
+
+echo ''
 echo 'Sleeping after stopping services...'
 sleep 15s
+
+echo ''
+echo 'Restarting extra services...'
+
+restart_service "/home/sundial/prefer-open/jar" prefer-open 3.4 '' beta
 
 echo ''
 echo 'Restarting services...'
@@ -91,8 +101,6 @@ echo 'Restarting services...'
 for ((i = 0; i < ARTIFACT_COUNT; i++)); do
   restart_service "$SUNDIAL_BASE_PATH/${ARTIFACT_LIST[i * 3 + 2]}" "${ARTIFACT_LIST[i * 3]}" "${ARTIFACT_LIST[i * 3 + 1]}"
 done
-
-#restart_service "$SUNDIAL_BASE_PATH/sundial-broadcast" broadcast 2.3 '' prod
 
 echo ''
 echo 'Sleeping after restarting services...'
