@@ -1,5 +1,14 @@
 #!/bin/bash
 
+CONFIRM_FLAG=$1
+CONFIRMED=false
+if test "$CONFIRM_FLAG" = '--confirm'; then
+  CONFIRMED=true
+fi
+
+echo ''
+echo "CONFIRMED: $CONFIRMED"
+
 SUNDIAL_BASE_PATH='/home/sundial/BETA'
 DEFAULT_SPRING_PROFILE='beta'
 SPRING_CLOUD_CONFIG_URI='http://sd1.benbenedu.cn:8888'
@@ -30,6 +39,7 @@ ARTIFACT_LIST=("broadcast" "2.3" "sundial-broadcast"
   "examresult" "1.2.4" "sundial-examresult")
 ARTIFACT_COUNT=${#ARTIFACT_LIST[@]}/3
 
+echo ''
 echo "ARTIFACT_COUNT: $ARTIFACT_COUNT"
 
 stop_service() {
@@ -40,7 +50,9 @@ stop_service() {
     echo "no process related to jar: $JAR_ARTIFACT_ID"
   else
     echo "process:$PID related to jar: $JAR_ARTIFACT_ID"
-    #    kill "$PID"
+    if test "$CONFIRM_FLAG"; then
+      kill "$PID"
+    fi
   fi
 }
 
@@ -66,7 +78,9 @@ restart_service() {
 
   CMD="java $JVM_PARAMS -jar $JAR_ARTIFACT_ID-$JAR_VERSION.jar --spring.cloud.config.uri=$SPRING_CLOUD_CONFIG_URI --spring.profiles.active=$SPRING_PROFILE --spring.data.mongodb.uri=$MONGODB_URI --spring.redis.host=$REDIS_HOST"
   echo "CMD: $CMD"
-  #  nohup $CMD &
+  if test "$CONFIRM_FLAG"; then
+    nohup $CMD &
+  fi
 }
 
 echo ''
