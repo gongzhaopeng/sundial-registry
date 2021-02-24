@@ -77,7 +77,10 @@ restart_service() {
 
   echo "determined SPRING_PROFILE: $SPRING_PROFILE"
 
-  CMD="java $JVM_PARAMS -jar $JAR_ARTIFACT_ID-$JAR_VERSION.jar --spring.cloud.config.uri=$SPRING_CLOUD_CONFIG_URI --spring.profiles.active=$SPRING_PROFILE --spring.data.mongodb.uri=$MONGODB_URI --spring.redis.host=$REDIS_HOST"
+  JAR_FILE_NAME="$JAR_ARTIFACT_ID-$JAR_VERSION.jar"
+  ls -lah $JAR_FILE_NAME
+
+  CMD="java $JVM_PARAMS -jar $JAR_FILE_NAME --spring.cloud.config.uri=$SPRING_CLOUD_CONFIG_URI --spring.profiles.active=$SPRING_PROFILE --spring.data.mongodb.uri=$MONGODB_URI --spring.redis.host=$REDIS_HOST"
   echo "CMD: $CMD"
   if test "$CONFIRM_FLAG"; then
     nohup $CMD &
