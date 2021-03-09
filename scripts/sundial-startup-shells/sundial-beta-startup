@@ -12,7 +12,7 @@ echo "CONFIRMED: $CONFIRMED"
 SUNDIAL_BASE_PATH='/home/sundial/BETA'
 DEFAULT_SPRING_PROFILE='beta'
 SPRING_CLOUD_CONFIG_URI='http://sd1.benbenedu.cn:8888'
-MONGODB_URI='mongodb://localhost:27017'
+MONGODB_URI='mongodb://172.26.202.165:27018,172.26.202.167:27018/?replicaSet=beta'
 REDIS_HOST='localhost'
 
 GATEWAY_ARTIFACT_ID="gateway"
@@ -27,7 +27,7 @@ ARTIFACT_LIST=("broadcast" "2.3" "sundial-broadcast" "-Xmx512M -Xms256M"
   "resource" "1.2.0" "sundial-resource" "-Xmx512M -Xms256M"
   "report" "1.4.9" "sundial-report" ""
   "promotion" "0.0.3" "sundial-promotion" ""
-  "gradedlibrary" "0.5" "sundial-gradedlibrary" ""
+  "gradedlibrary" "0.6" "sundial-gradedlibrary" ""
   "xauth" "2.1" "sundial-xauth" ""
   "question" "1.2.3" "sundial-question" ""
   "examstation" "1.4.4" "sundial-examstation" ""
