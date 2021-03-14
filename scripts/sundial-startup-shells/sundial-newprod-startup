@@ -33,7 +33,7 @@ ARTIFACT_LIST=("preference" "1.1.9" "sundial-preference" ""
   "registry" "0.2" "sundial-registry" ""
   "xauth" "2.1" "sundial-xauth" ""
   "report" "1.4.9" "sundial-report" ""
-  "examstation" "1.3.6" "sundial-examstation" "")
+  "examstation" "1.4.4" "sundial-examstation" "")
 ARTIFACT_PROP_COUNT=4
 ARTIFACT_COUNT=${#ARTIFACT_LIST[@]}/$ARTIFACT_PROP_COUNT
 
