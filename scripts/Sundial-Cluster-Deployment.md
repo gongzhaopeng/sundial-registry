@@ -1,6 +1,8 @@
 ----------------------------------------------------------------------------------------------------------------
 SUNDIAL CLUSTER
 
+Reference:  https://medium.com/swlh/spring-cloud-high-availability-for-eureka-b5b7abcefb32
+
 Eureka seamless
 Eureka服务下线后快速感知配置 => https://www.jianshu.com/p/153bafe78ae7
 
