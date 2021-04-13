@@ -16,9 +16,9 @@ nohup java -jar config-0.2.jar --spring.cloud.config.server.git.username=git --s
 
 —启动注册中心—
 SD3
-nohup java -jar registry-0.2.jar --spring.cloud.config.uri=http://sd3.benbenedu.cn:8888,http://sd6.benbenedu.cn:8888 --spring.profiles.active=cluster_sd3 &
+nohup java -jar registry-0.2.jar --spring.cloud.config.uri=http://psd3.benbenedu.cn:8888,http://psd6.benbenedu.cn:8888 --spring.profiles.active=cluster_sd3 &
 SD6
-nohup java -jar registry-0.2.jar --spring.cloud.config.uri=http://sd3.benbenedu.cn:8888,http://sd6.benbenedu.cn:8888 --spring.profiles.active=cluster_sd6 &
+nohup java -jar registry-0.2.jar --spring.cloud.config.uri=http://psd3.benbenedu.cn:8888,http://psd6.benbenedu.cn:8888 --spring.profiles.active=cluster_sd6 &
 
 -启动业务微服务群-
 bash ./sundial-cluster-startup
