@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# sundial-cluster-startup
+
 CONFIRM_FLAG=$1
 CONFIRMED=false
 if test "$CONFIRM_FLAG" = '--confirm'; then

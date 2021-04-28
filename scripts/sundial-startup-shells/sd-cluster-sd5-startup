@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# sd-cluster-sd5-startup
+
 CONFIRM_FLAG=$1
 CONFIRMED=false
 if test "$CONFIRM_FLAG" = '--confirm'; then
