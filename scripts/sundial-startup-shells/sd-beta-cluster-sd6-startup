@@ -97,19 +97,9 @@ for ((i = 0; i < ARTIFACT_COUNT; i++)); do
   stop_service "${ARTIFACT_LIST[i * ARTIFACT_PROP_COUNT]}"
 done
 
-#echo ''
-#echo 'Stopping extra services...'
-#
-#stop_service prefer-open
-
 echo ''
 echo 'Sleeping after stopping services...'
 sleep 15s
-
-#echo ''
-#echo 'Restarting extra services...'
-#
-#restart_service "/home/sundial/prefer-open/jar" prefer-open 3.5 '-Xms1024m' beta
 
 echo ''
 echo 'Restarting services...'
