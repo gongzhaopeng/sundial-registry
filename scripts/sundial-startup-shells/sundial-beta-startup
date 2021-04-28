@@ -18,7 +18,7 @@ REDIS_HOST='localhost'
 GATEWAY_ARTIFACT_ID="gateway"
 GATEWAY_ARTIFACT_VERSION="0.2"
 GATEWAY_ARTIFACT_REL_PATH="sundial-gateway"
-ARTIFACT_LIST=("broadcast" "2.5" "sundial-broadcast" "-Xmx512M -Xms256M"
+ARTIFACT_LIST=("broadcast" "2.5" "sundial-broadcast" ""
   "growth-answer" "0.2.1" "sundial-growthanswer" ""
   "dataexporter" "0.1.0" "sundial-dataexporter" "-Xmx512M -Xms256M"
   "examconfig" "1.1.8" "sundial-examconfig" ""
