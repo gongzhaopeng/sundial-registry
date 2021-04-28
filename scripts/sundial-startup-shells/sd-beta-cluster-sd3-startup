@@ -1,0 +1,127 @@
+#!/bin/bash
+
+CONFIRM_FLAG=$1
+CONFIRMED=false
+if test "$CONFIRM_FLAG" = '--confirm'; then
+  CONFIRMED=true
+fi
+
+echo ''
+echo "CONFIRMED: $CONFIRMED"
+
+SUNDIAL_BASE_PATH='/home/sundial/BETA'
+DEFAULT_SPRING_PROFILE='cluster'
+SPRING_CLOUD_CONFIG_URI='http://psd3.benbenedu.cn:8888,http://psd6.benbenedu.cn:8888'
+MONGODB_URI='mongodb://psd2.benbenedu.cn:27018,psd3.benbenedu.cn:27018/?replicaSet=beta'
+REDIS_HOST='psd3.benbenedu.cn'
+REDIS_PORT='6380'
+
+GATEWAY_ARTIFACT_ID="gateway"
+GATEWAY_ARTIFACT_VERSION="0.2"
+GATEWAY_ARTIFACT_REL_PATH="sundial-gateway"
+ARTIFACT_LIST=("examconfig" "1.1.9" "sundial-examconfig" ""
+  "resource" "1.2.2" "sundial-resource" "-Xmx512M -Xms256M"
+  "report" "1.5.1" "sundial-report" ""
+  "gradedlibrary" "0.7" "sundial-gradedlibrary" ""
+  "xauth" "2.1" "sundial-xauth" ""
+  "question" "1.3.6" "sundial-question" ""
+  "examstation" "1.4.8" "sundial-examstation" ""
+  "accountcenter" "1.3.4" "sundial-accountcenter" ""
+  "exampaper" "1.1.3" "sundial-exampaper" ""
+  "delivery" "1.2.1" "sundial-delivery" "-Xmx512M -Xms256M"
+  "examresult" "1.2.5" "sundial-examresult" "")
+ARTIFACT_PROP_COUNT=4
+ARTIFACT_COUNT=${#ARTIFACT_LIST[@]}/$ARTIFACT_PROP_COUNT
+
+echo ''
+echo "ARTIFACT_COUNT: $ARTIFACT_COUNT"
+
+stop_service() {
+  JAR_ARTIFACT_ID=$1
+
+  PID=$(ps aux | grep "$JAR_ARTIFACT_ID" | grep java | grep '\-\-spring.profiles.active=' | awk '{print $2}')
+  if [ -z "$PID" ]; then
+    echo "no process related to jar: $JAR_ARTIFACT_ID"
+  else
+    echo "process:$PID related to jar: $JAR_ARTIFACT_ID"
+    if test "$CONFIRM_FLAG"; then
+      kill "$PID"
+    fi
+  fi
+}
+
+restart_service() {
+  echo ''
+
+  JAR_PATH=$1
+  JAR_ARTIFACT_ID=$2
+  JAR_VERSION=$3
+  JVM_PARAMS=$4
+  SPRING_PROFILE=$5
+  echo "service params {JAR_PATH:$JAR_PATH, JAR_ARTIFACT_ID:$JAR_ARTIFACT_ID, JAR_VERSION:$JAR_VERSION, JVM_PARAMS:$JVM_PARAMS, SPRING_PROFILE:$SPRING_PROFILE}"
+
+  stop_service "$JAR_ARTIFACT_ID"
+
+  cd "$JAR_PATH" || exit
+
+  if [ -z "$SPRING_PROFILE" ]; then
+    SPRING_PROFILE="$DEFAULT_SPRING_PROFILE"
+  fi
+
+  echo "determined SPRING_PROFILE: $SPRING_PROFILE"
+
+  JAR_FILE_NAME="$JAR_ARTIFACT_ID-$JAR_VERSION.jar"
+  ls -lah $JAR_FILE_NAME
+
+  CMD="java $JVM_PARAMS -jar $JAR_FILE_NAME --spring.cloud.config.uri=$SPRING_CLOUD_CONFIG_URI --spring.profiles.active=$SPRING_PROFILE --spring.data.mongodb.uri=$MONGODB_URI --spring.redis.host=$REDIS_HOST --spring.redis.port=$REDIS_PORT"
+  echo "CMD: $CMD"
+  if test "$CONFIRM_FLAG"; then
+    nohup $CMD &
+  fi
+}
+
+echo ''
+echo 'Stopping gateway...'
+
+stop_service $GATEWAY_ARTIFACT_ID
+
+echo ''
+echo 'Stopping services...'
+
+for ((i = 0; i < ARTIFACT_COUNT; i++)); do
+  stop_service "${ARTIFACT_LIST[i * ARTIFACT_PROP_COUNT]}"
+done
+
+#echo ''
+#echo 'Stopping extra services...'
+#
+#stop_service prefer-open
+
+echo ''
+echo 'Sleeping after stopping services...'
+sleep 15s
+
+#echo ''
+#echo 'Restarting extra services...'
+#
+#restart_service "/home/sundial/prefer-open/jar" prefer-open 3.5 '-Xms1024m' beta
+
+echo ''
+echo 'Restarting services...'
+
+for ((i = 0; i < ARTIFACT_COUNT; i++)); do
+  head_prop_pos=$((i * ARTIFACT_PROP_COUNT))
+  restart_service "$SUNDIAL_BASE_PATH/${ARTIFACT_LIST[head_prop_pos + 2]}" "${ARTIFACT_LIST[head_prop_pos]}" "${ARTIFACT_LIST[head_prop_pos + 1]}" "${ARTIFACT_LIST[head_prop_pos + 3]}"
+done
+
+echo ''
+echo 'Sleeping after restarting services...'
+sleep 30s
+
+echo ''
+echo 'Restarting gateway...'
+
+restart_service "$SUNDIAL_BASE_PATH/$GATEWAY_ARTIFACT_REL_PATH" $GATEWAY_ARTIFACT_ID $GATEWAY_ARTIFACT_VERSION
+
+echo ''
+echo "Congratulations! Sundial:$SPRING_PROFILE is up."
