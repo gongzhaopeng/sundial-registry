@@ -37,8 +37,6 @@ ARTIFACT_LIST=(
 
   # LEVEL-3
   "benben-store" "0.7" "sundial-bbstore" ""
-  "growth-answer" "0.3" "sundial-growthanswer" ""
-  "preference" "1.2.5" "sundial-preference" ""
 
   # LEVEL-4
   "resource" "1.2.2" "sundial-resource" "-Xmx512M -Xms256M"

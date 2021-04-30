@@ -36,6 +36,8 @@ ARTIFACT_LIST=(
   "examconfig" "1.1.9" "sundial-examconfig" ""
 
   # LEVEL-3
+  "growth-answer" "0.3" "sundial-growthanswer" ""
+  "preference" "1.2.5" "sundial-preference" ""
   "gradedlibrary" "0.7" "sundial-gradedlibrary" ""
   "promotion" "0.0.6" "sundial-promotion" ""
 
