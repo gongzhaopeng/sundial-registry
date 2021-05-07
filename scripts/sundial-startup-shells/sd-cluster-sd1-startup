@@ -33,7 +33,7 @@ ARTIFACT_LIST=(
   # LEVEL-4
   "resource" "1.2.2" "sundial-resource" "-Xmx512M -Xms256M"
   "delivery" "1.2.1" "sundial-delivery" "-Xmx512M -Xms256M"
-  "exammonitor" "0.0.5" "sundial-exammonitor" ""
+  "exammonitor" "0.0.5" "sundial-exammonitor" "-Xmx512M -Xms256M"
   "dataexporter" "0.1.2" "sundial-dataexporter" "-Xmx512M -Xms256M"
 )
 ARTIFACT_PROP_COUNT=4
