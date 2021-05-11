@@ -29,6 +29,7 @@ ARTIFACT_LIST=(
   "report" "1.5.1" "sundial-report" ""
   "examresult" "1.2.5" "sundial-examresult" ""
   "broadcast" "2.5" "sundial-broadcast" ""
+  "prefer-open" "5.0" "sundial-preferopen" ""
 
   # LEVEL-4
   "resource" "1.2.2" "sundial-resource" "-Xmx512M -Xms256M"
