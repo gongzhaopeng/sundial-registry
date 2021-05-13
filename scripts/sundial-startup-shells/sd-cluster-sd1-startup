@@ -28,7 +28,7 @@ ARTIFACT_LIST=(
   "examstation" "1.4.8" "sundial-examstation" ""
   "report" "1.5.1" "sundial-report" ""
   "examresult" "1.2.5" "sundial-examresult" ""
-  "broadcast" "2.6" "sundial-broadcast" ""
+  "broadcast" "2.7" "sundial-broadcast" ""
   "prefer-open" "5.0" "sundial-preferopen" ""
 
   # LEVEL-4
