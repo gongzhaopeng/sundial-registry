@@ -43,7 +43,7 @@ ARTIFACT_LIST=(
   "promotion" "0.0.6" "sundial-promotion" ""
 
   # LEVEL-4
-  "exammonitor" "0.0.5" "sundial-exammonitor" ""
+  "exammonitor" "0.0.5" "sundial-exammonitor" "-Xmx512M -Xms256M"
   "dataexporter" "0.1.2" "sundial-dataexporter" "-Xmx512M -Xms256M"
 )
 ARTIFACT_PROP_COUNT=4
