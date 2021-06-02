@@ -16,7 +16,7 @@ SD6
 cd /home/sundial/distributions/kafka_2.12-2.4.1.sd3.2/bin
 ./zookeeper-server-start.sh ../config/2.sd-beta.zookeeper.properties
 
--Zookeeper-
+-Kafka-
 SD2
 cd /home/sundial/distributions/kafka_2.12-2.4.1.sd3.3/bin
 ./kafka-server-start-saal.sh ../config/server-sasl.properties
