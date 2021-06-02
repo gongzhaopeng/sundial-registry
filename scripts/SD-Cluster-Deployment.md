@@ -1,4 +1,33 @@
 ----------------------------------------------------------------------------------------------------------------
+INFRASTRUCTURE::KAFKA-CLUSTER PREPARATION
+
+Reference:
+https://blog.csdn.net/u012040869/article/details/82589002
+https://blog.csdn.net/weixin_41452575/article/details/111193648
+
+-Zookeeper-
+SD1
+cd /home/sundial/distributions/kafka_2.12-2.4.1.sd.1/bin
+./zookeeper-server-start.sh ../config/1.sd.zookeeper.properties
+SD4
+cd /home/sundial/distributions/kafka_2.12-2.4.1.sd.2/bin
+./zookeeper-server-start.sh ../config/2.sd.zookeeper.properties
+SD5
+cd /home/sundial/distributions/kafka_2.12-2.4.1.sd.3/bin
+./zookeeper-server-start.sh ../config/3.sd.zookeeper.properties
+
+-Zookeeper-
+SD1
+cd /home/sundial/distributions/kafka_2.12-2.4.1.sd.1/bin
+./kafka-server-start-saal.sh ../config/server-sasl.properties
+SD4
+cd /home/sundial/distributions/kafka_2.12-2.4.1.sd.2/bin
+./kafka-server-start-saal.sh ../config/server-sasl.properties
+SD5
+cd /home/sundial/distributions/kafka_2.12-2.4.1.sd.3/bin
+./kafka-server-start-saal.sh ../config/server-sasl.properties
+
+----------------------------------------------------------------------------------------------------------------
 SD SUNDIAL CLUSTER
 
 Reference:  https://medium.com/swlh/spring-cloud-high-availability-for-eureka-b5b7abcefb32
